@@ -1,0 +1,5 @@
+*.env
+*.pdf
+docs/
+old/
+__pycache__/

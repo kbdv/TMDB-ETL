@@ -1,5 +1,7 @@
 # needed libraries
 
+matplotlib
+seaborn
 Flask
 Flask-CORS
 requests
