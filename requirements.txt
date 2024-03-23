@@ -1,0 +1,8 @@
+# needed libraries
+
+Flask
+Flask-CORS
+requests
+pytest
+pandas
+numpy
