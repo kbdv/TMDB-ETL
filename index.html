@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TMDB Kris Brice</title>
+    <style>
+        body{
+            margin:40px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        tr:hover {
+            background-color: #dddddd;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body onload="initialTable()">
+    
+    <h1>Movies released in the past month</h1>
+    <br>
+    <a href="bookmarks.html"><button style="display: inline-block; background-color: #e8cdb4; border-radius:5px; font-size: 18px;">Bookmarks</button></a>
+    <br><br><br>
+    <span>Filter by genre : </span>
+    <select id="dropdownId" style="display: inline-block; width: 150px;"></select>
+    <button onclick="clearSelection()">Clear</button>
+    <span style="display: inline-block; width: 100px;"></span>
+    <span>Sort by date : </span>
+    <button onclick="sortDateDesc()">Latest</button>
+    <button onclick="sortDateAsc()">Oldest</button>
+    <span style="display: inline-block; width: 50px;"></span>
+    <span>Sort by rating : </span>
+    <button onclick="sortRatingAsc()">&#9650;</button>
+    <button onclick="sortRatingDesc()">&#9660;</button>
+    <span style="display: inline-block; width: 100px;"></span>
+  
+
+    <table id="moviesTable">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Genres</th>
+                <th>Release Date</th>
+                <th>Rating</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+
+    <div id="popup" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #fff; padding: 20px; border: 1px solid #ccc; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);">
+        <p id="popupContent"></p>
+        <button onclick="addBookmark()">Yes</button>
+        <button onclick="closePopup()">No</button>
+    </div>
+
+
+
+    <script>
+
+        var popup = document.getElementById("popup");
+        var popupContent = document.getElementById("popupContent");
+        const server = '';
+        const tableBody = document.querySelector('#moviesTable tbody');
+        var dropdown = document.getElementById('dropdownId');
+        var title = "";
+        var genres = "";
+        var release_date = "";
+        var rating = "";
+
+
+        // Function that takes data and loads it into a table
+        function loadTable(data) {     
+            // Clear current table
+            tableBody.innerHTML = ''; 
+            // Make a new table based on provided data         
+            data.forEach(movie => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${movie.title}</td>
+                    <td>${movie.genres}</td>
+                    <td>${movie.release_date}</td>
+                    <td>${movie.rating}</td>
+                    `;
+                tableBody.appendChild(row);
+            });
+        };
+  
+
+        // Function to load the initial table upon first page load.
+        function initialTable() {
+            // Retrieve all the movies
+            fetch(server).then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            }).then(data => {
+                loadTable(data);
+                listGenres();
+            }).catch(error => {
+                console.error('Error fetching data:', error);
+            });
+        };
+
+        // Function to trigger whenever a dropdown option is selected
+        dropdown.addEventListener("change", function() {
+            // Get the selected value
+            var value = dropdown.value;
+            // Call your function with the selected value as input
+            filterGenre(value);
+          });
+
+        // Function to sort date descending and reload table
+        function sortDateDesc() {
+            fetch(server + '/sort-date-desc')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error' + response.status);
+                    }
+                    // Parse the response as JSON data
+                    return response.json();
+                }).then(data => {
+                    loadTable(data);
+                }).catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        };
+
+        // Function to sort date ascending and reload table
+        function sortDateAsc() {
+            fetch(server + '/sort-date-asc')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error' + response.status);
+                    }
+                    // Parse the response as JSON data
+                    return response.json();
+                }).then(data => {
+                    loadTable(data);
+                }).catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        };
+
+
+        // Function to sort rating descending and reload table
+        function sortRatingDesc() {
+            // Send a GET request to the /sort-date-desc route
+            fetch(server + '/sort-rating-desc')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error' + response.status);
+                    }
+                    // Parse the response as JSON data
+                    return response.json();
+                }).then(data => {
+                    loadTable(data);
+                }).catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        };
+
+        // Function to sort rating ascending and reload table
+        function sortRatingAsc() {
+            // Send a GET request to the /sort-date-desc route
+            fetch(server + '/sort-rating-asc')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error' + response.status);
+                    }
+                    // Parse the response as JSON data
+                    return response.json();
+                }).then(data => {
+                    loadTable(data);
+                }).catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        };
+
+        
+        // Function to filter by genre and reload table
+        function filterGenre() {
+            var selectedOption = dropdown.options[dropdown.selectedIndex];
+            var selectedValue = selectedOption.value;
+            var genre = selectedValue;
+
+            // Send a GET request to the /sort-date-desc route
+            fetch(server + '/filter-genre/' + genre)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error' + response.status);
+                    }
+                    // Parse the response as JSON data
+                    return response.json();
+                }).then(data => {
+                    loadTable(data);
+                }).catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        };
+
+
+        function listGenres(){
+            // Retrieve the list of genres
+            fetch(server+'/genres').then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            }).then(data => {
+                // Clear previous dropdown
+                dropdown.innerHTML = '';
+                // Iterate over the array of strings
+                data.forEach(genre => {
+                    // Create option element for each string
+                    const option = document.createElement('option');
+                    option.text = String(genre);
+                    option.value = String(genre);
+                    // Append option to dropdown
+                    dropdown.appendChild(option);
+                });
+                dropdown.selectedIndex = -1;
+            }).catch(error => {
+                console.error('Error fetching data:', error);
+            });
+        }
+
+        function clearSelection() {
+            // Set the selectedIndex of the dropdown to -1
+            dropdown.selectedIndex = -1;
+            initialTable();
+        }
+
+
+
+        // Bookmark ============================================================
+
+        // Click event handler to trigger bookmark window
+        document.getElementById("moviesTable").addEventListener("click", function(event) {
+            var target = event.target;
+            // Check if the clicked element is a td within a tr
+            if (target.tagName === "TD" && target.parentNode.tagName === "TR") {
+                title = target.parentNode.cells[0].textContent;
+                genres = target.parentNode.cells[1].textContent;
+                release_date = target.parentNode.cells[2].textContent;
+                rating = target.parentNode.cells[3].textContent;
+                showPopup(title);
+            }
+        });
+
+        // Enabling popup window
+        function showPopup(title) {
+            popupContent.textContent = "Do you want to bookmark '"+title+"' ?";
+            popup.style.display = "block";
+        }
+
+        // Enabling button to close popup
+        function closePopup() {
+            popup.style.display = "none";
+        }
+
+
+        // Add to bookmarks table
+        function addBookmark() {
+            // Get the data from the row
+            // var title = document.getElementById("popupContent").textContent.split("'")[1]; // Extract title from popup content
+            console.log('here')
+            console.log(title, genres, release_date, rating)
+            var rowData = {
+                title: title,
+                genres : genres,
+                release_date : release_date,
+                rating : rating
+            };
+
+            // Send the data to the server
+            fetch(server +'/add-bookmark', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(rowData)
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Data added successfully
+                    console.log('Bookmark added successfully.');
+                } else {
+                    // Error handling
+                    console.error('Failed to add bookmark.');
+                }
+                // Close the popup regardless of success or failure
+                closePopup();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Close the popup
+                closePopup();
+            });
+        }
+
+
+
+
+    </script>
+
+
+
+</body>
+</html>
