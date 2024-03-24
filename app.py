@@ -1,5 +1,7 @@
-
 # python 3.10.11
+
+
+# This file creates the endpoints for our REST API.
 
 # imports
 import calendar
@@ -11,7 +13,8 @@ from flask import Flask, jsonify, render_template, request
 from flask_cors import CORS
 
 
-# We create a class so that we can update a dataframe for all scopes present.
+# ------------------------------------------------------
+# We create a class for our dataframe so that we can update it from any scope in this file.
 class MyDataFrame:
     def __init__(self):
         self.df = pd.DataFrame()
@@ -27,6 +30,7 @@ CORS(app)       # Enable Cross Origin requests
 database ='kb_movies.db'
 
 
+# ------------------------------------------------------
 # The default page. It load all movies of the previous month.
 @app.route('/', methods=['GET'])
 def retrieve_all_movies():
@@ -121,11 +125,11 @@ def filter_by_genre(genre):
 # Adding a new bookmark
 @app.route('/add-bookmark', methods=['POST'])
 def add_bookmark():
-    data = request.json
+    data = request.json # retrieve the data sent to this endpoint
     df_add = pd.DataFrame([data]) 
     with sqlite3.connect(database) as con:
         df_add.to_sql('movies_bookmarks', con, if_exists='append', index=False)
-    return 'Bookmark Added', 200
+    return 'Bookmark added', 200
 
 
 
