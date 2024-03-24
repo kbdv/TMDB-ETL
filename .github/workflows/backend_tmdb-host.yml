@@ -8,6 +8,10 @@ on:
   push:
     branches:
       - backend
+    paths:
+      - 'app.py'
+      - 'kb_movies.db'
+      - 'requirements.txt'
   workflow_dispatch:
 
 jobs:
