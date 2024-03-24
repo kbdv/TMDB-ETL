@@ -41,10 +41,10 @@
     <span>Sort by rating : </span>
     <button onclick="sortRatingAsc()">&#9650;</button>
     <button onclick="sortRatingDesc()">&#9660;</button>
-    <span style="display: inline-block; width: 100px;"></span>
+    <br>
   
 
-    <table id="moviesTable">
+    <table id="moviesTable" style="margin-top:10px;">
         <thead>
             <tr>
                 <th>Title</th>
@@ -70,9 +70,10 @@
 
         var popup = document.getElementById("popup");
         var popupContent = document.getElementById("popupContent");
-        const server = '';
+        const server = 'https://tmdb-host.azurewebsites.net/';
         const tableBody = document.querySelector('#moviesTable tbody');
         var dropdown = document.getElementById('dropdownId');
+
         var title = "";
         var genres = "";
         var release_date = "";
@@ -113,13 +114,13 @@
             });
         };
 
+
         // Function to trigger whenever a dropdown option is selected
         dropdown.addEventListener("change", function() {
-            // Get the selected value
             var value = dropdown.value;
-            // Call your function with the selected value as input
             filterGenre(value);
           });
+
 
         // Function to sort date descending and reload table
         function sortDateDesc() {
@@ -128,7 +129,6 @@
                     if (!response.ok) {
                         throw new Error('Error' + response.status);
                     }
-                    // Parse the response as JSON data
                     return response.json();
                 }).then(data => {
                     loadTable(data);
@@ -137,6 +137,7 @@
                 });
         };
 
+
         // Function to sort date ascending and reload table
         function sortDateAsc() {
             fetch(server + '/sort-date-asc')
@@ -144,7 +145,6 @@
                     if (!response.ok) {
                         throw new Error('Error' + response.status);
                     }
-                    // Parse the response as JSON data
                     return response.json();
                 }).then(data => {
                     loadTable(data);
@@ -156,13 +156,11 @@
 
         // Function to sort rating descending and reload table
         function sortRatingDesc() {
-            // Send a GET request to the /sort-date-desc route
             fetch(server + '/sort-rating-desc')
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Error' + response.status);
                     }
-                    // Parse the response as JSON data
                     return response.json();
                 }).then(data => {
                     loadTable(data);
@@ -173,13 +171,11 @@
 
         // Function to sort rating ascending and reload table
         function sortRatingAsc() {
-            // Send a GET request to the /sort-date-desc route
             fetch(server + '/sort-rating-asc')
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Error' + response.status);
                     }
-                    // Parse the response as JSON data
                     return response.json();
                 }).then(data => {
                     loadTable(data);
@@ -195,13 +191,11 @@
             var selectedValue = selectedOption.value;
             var genre = selectedValue;
 
-            // Send a GET request to the /sort-date-desc route
             fetch(server + '/filter-genre/' + genre)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Error' + response.status);
                     }
-                    // Parse the response as JSON data
                     return response.json();
                 }).then(data => {
                     loadTable(data);
@@ -210,9 +204,8 @@
                 });
         };
 
-
+        // Function to retrieve the list of genres
         function listGenres(){
-            // Retrieve the list of genres
             fetch(server+'/genres').then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -223,7 +216,6 @@
                 dropdown.innerHTML = '';
                 // Iterate over the array of strings
                 data.forEach(genre => {
-                    // Create option element for each string
                     const option = document.createElement('option');
                     option.text = String(genre);
                     option.value = String(genre);
@@ -237,14 +229,13 @@
         }
 
         function clearSelection() {
-            // Set the selectedIndex of the dropdown to -1
+            // Set the dropdown to empty
             dropdown.selectedIndex = -1;
             initialTable();
         }
 
 
-
-        // Bookmark ============================================================
+        // -------------------------------------------------------------------
 
         // Click event handler to trigger bookmark window
         document.getElementById("moviesTable").addEventListener("click", function(event) {
@@ -274,9 +265,6 @@
         // Add to bookmarks table
         function addBookmark() {
             // Get the data from the row
-            // var title = document.getElementById("popupContent").textContent.split("'")[1]; // Extract title from popup content
-            console.log('here')
-            console.log(title, genres, release_date, rating)
             var rowData = {
                 title: title,
                 genres : genres,
@@ -294,28 +282,19 @@
             })
             .then(response => {
                 if (response.ok) {
-                    // Data added successfully
                     console.log('Bookmark added successfully.');
                 } else {
-                    // Error handling
                     console.error('Failed to add bookmark.');
                 }
-                // Close the popup regardless of success or failure
                 closePopup();
             })
             .catch(error => {
                 console.error('Error:', error);
-                // Close the popup
                 closePopup();
             });
         }
 
-
-
-
     </script>
-
-
 
 </body>
 </html>

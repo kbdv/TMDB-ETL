@@ -41,24 +41,17 @@
     </table>
 
 
-    <div id="popup" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #fff; padding: 20px; border: 1px solid #ccc; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);">
-        <p id="popupContent"></p>
-        <button onclick="addBookmark()">Yes</button>
-        <button onclick="closePopup()">Close</button>
-    </div>
-
-
 
     <script>
 
-        const server = '';
+        const server = 'https://tmdb-host.azurewebsites.net/';
         const tableBody = document.querySelector('#moviesTable tbody');
-
 
         // Function that takes data and loads it into a table
         function loadTable(data) {     
             // Clear current table
-            tableBody.innerHTML = '';          
+            tableBody.innerHTML = '';
+            // load the table          
             data.forEach(movie => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
@@ -73,14 +66,14 @@
 
         // Function to load the bookmarks table
         function loadBookmarks() {
-            // Retrieve all the movies
+            // Retrieve all bookmarked movies
             fetch(server+'/bookmarks').then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 return response.json();
             }).then(data => {
-                loadTable(data);
+                loadTable(data);   
             }).catch(error => {
                 console.error('Error fetching data:', error);
             });
