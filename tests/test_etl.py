@@ -19,15 +19,15 @@ cols = {'title', 'genres', 'release_date', 'rating'}
 
 
 #-----------------------------------------------
-# 1. verify that the tables 'movies_bronze', 'movies_silver' and 'genre_list' exist in the database
+# 1. verify that the tables 'movies_bronze', 'movies_silver' 'movies_bookmarks' and 'genre_list' exist in the database
 def test_db_exist():
     with sqlite3.connect(database) as con:
         df_tables = pd.read_sql_query(f'''
             SELECT name 
             FROM sqlite_master 
-            WHERE type='table' AND name in ('movies_bronze', 'movies_silver', 'genre_list');
+            WHERE type='table' AND name in ('movies_bronze', 'movies_silver', 'movies_bookmarks', 'genre_list');
         ''', con)
-        assert df_tables.shape[0] == 3
+        assert df_tables.shape[0] == 4
 
 
 #-----------------------------------------------
