@@ -23,7 +23,7 @@ data = MyDataFrame()
 app = Flask(__name__)   
 CORS(app)       # Enable Cross Origin requests
 
-
+# set the database variable
 database ='kb_movies.db'
 
 
