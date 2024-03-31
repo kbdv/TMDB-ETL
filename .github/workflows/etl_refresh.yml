@@ -39,7 +39,7 @@ jobs:
         pip install seaborn
 
         
-    - name: Execute notebook   
+    - name: Execute notebook and tests  
       run: |
         jupyter nbconvert --to notebook --execute etl.ipynb
         python tests/test_app.py
