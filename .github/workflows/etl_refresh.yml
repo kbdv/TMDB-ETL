@@ -37,9 +37,12 @@ jobs:
         pip install seaborn
         pip install pytest pytest-cov
     
-    - name: Execute notebook and tests
+    - name: Execute notebook 
+      run: jupyter nbconvert --to notebook --execute etl.ipynb
+      
+    - name: Execute tests
+      if: ${{ success() }} 
       run: | 
-        jupyter nbconvert --to notebook --execute etl.ipynb
         pytest tests/ --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
         # pytest tests/test_app.py
         # pytest tests/test_etl.py
