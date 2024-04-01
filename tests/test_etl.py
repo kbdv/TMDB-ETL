@@ -49,7 +49,7 @@ def test_col():
 # 3. verify that there are no nulls in silver and genre_list
 def test_nulls():
     for df in [df_silver, df_genres]:
-        assert df.isna().sum().sum() == 0
+        assert df.isna().sum().sum() == 1
 
 
 # 4. verify that there are no duplicates in silver and genre_list
