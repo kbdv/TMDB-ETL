@@ -13,6 +13,8 @@ on:
       - 'kb_movies.db'
       - 'requirements.txt'
   workflow_dispatch:
+  
+permissions: write-all 
 
 jobs:
   build:
