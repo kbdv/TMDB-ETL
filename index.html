@@ -25,6 +25,9 @@
             cursor:pointer;
         }
     </style>
+    <script type="text/javascript"
+        src="variables1.js">
+    </script>
 </head>
 
 <body onload="initialTable()">
@@ -74,7 +77,6 @@
         // variables
         var popup = document.getElementById("popup");
         var popupContent = document.getElementById("popupContent");
-        const server = 'https://tmdb-host.azurewebsites.net/';
         const tableBody = document.querySelector('#moviesTable tbody');
         var dropdown = document.getElementById('dropdownId');
 
@@ -107,7 +109,7 @@
             // Retrieve all the movies
             fetch(server).then(response => {
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    throw new Error('Error' + response.status);
                 }
                 return response.json();
             }).then(data => {
@@ -212,7 +214,7 @@
         function listGenres(){
             fetch(server+'/genres').then(response => {
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    throw new Error('Error' + response.status);
                 }
                 return response.json();
             }).then(data => {

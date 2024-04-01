@@ -21,6 +21,9 @@
             cursor:pointer;
         }
     </style>
+    <script type="text/javascript"
+        src="variables1.js">
+    </script>
 </head>
 
 <body onload="loadBookmarks()">
@@ -47,7 +50,6 @@
 
     <script>
 
-        const server = 'https://tmdb-host.azurewebsites.net/';
         const tableBody = document.querySelector('#moviesTable tbody');
 
         // Function that takes data and loads it into a table
@@ -72,7 +74,7 @@
             // Retrieve all bookmarked movies
             fetch(server+'/bookmarks').then(response => {
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    throw new Error('Error' + response.status);
                 }
                 return response.json();
             }).then(data => {
