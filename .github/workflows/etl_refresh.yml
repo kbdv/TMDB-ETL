@@ -11,8 +11,7 @@ permissions: write-all # this allows us to avoid the 403 error.
 
 
 jobs:
-  job_1:
-    
+  run_notebook:
     env:
       API_KEY : ${{secrets.API_KEY}}
         
@@ -39,14 +38,16 @@ jobs:
         pip install seaborn
         pip install pytest
 
-        
     - name: Execute notebook and tests  
       run: |
         jupyter nbconvert --to notebook --execute etl.ipynb
         pytest tests/test_app.py
         pytest tests/test_etl.py
-
-        
+   
+   
+  commit_and_push:
+    runs-on: ubuntu-latest
+    steps:
     - name: Commit and Push Changes
       run: |
         git config --global user.email "krisb2022@github.com"
