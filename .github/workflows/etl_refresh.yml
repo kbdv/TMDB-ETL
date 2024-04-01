@@ -43,8 +43,7 @@ jobs:
       
     - name: Execute tests
       if: ${{ success() }} 
-      run: | 
-        pytest tests/
+      run: pytest tests/
 
    
     - name: Commit and Push Changes
