@@ -11,10 +11,8 @@ import sqlite3
 import requests
 import sys
 
-
 # variables
-database = "./kb_movies.db"
-cols = {'title', 'genres', 'release_date', 'rating'}
+from variables3 import database, cols
 
 
 

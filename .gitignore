@@ -1,5 +1,6 @@
 *.env
 *.pdf
+testing.ipynb
 docs/
 old/
 __pycache__/

@@ -13,6 +13,10 @@ from flask import Flask, jsonify, render_template, request
 from flask_cors import CORS
 
 
+# variables
+from variables2 import database, main_query, bookmarks_query
+
+
 # ------------------------------------------------------
 # We create a class for our dataframe so that we can update it from any scope in this file.
 class MyDataFrame:
@@ -26,8 +30,6 @@ data = MyDataFrame()
 app = Flask(__name__)   
 CORS(app)       # Enable Cross Origin requests
 
-# set the database variable
-database ='kb_movies.db'
 
 
 # ------------------------------------------------------
@@ -35,12 +37,7 @@ database ='kb_movies.db'
 @app.route('/', methods=['GET'])
 def retrieve_all_movies():
     with sqlite3.connect(database) as con:
-        data.df = pd.read_sql_query(f'''
-            SELECT * 
-            FROM movies_silver
-            WHERE strftime('%m %Y', release_date) == strftime('%m %Y', date('now','start of month','-1 month'))
-            ORDER BY rating DESC;
-        ''',con)
+        data.df = pd.read_sql_query(main_query,con)
     return jsonify(data.df.to_dict(orient='records'))
 
 
@@ -48,12 +45,7 @@ def retrieve_all_movies():
 @app.route('/genres', methods=['GET'])      
 def retrieve_genres():
     with sqlite3.connect(database) as con:
-        df_genre = pd.read_sql_query(f'''
-                SELECT * 
-                FROM movies_silver
-                WHERE strftime('%m %Y', release_date) == strftime('%m %Y', date('now','start of month','-1 month'))
-                ORDER BY rating DESC;
-            ''',con)
+        df_genre = pd.read_sql_query(main_query,con)
         genres = df_genre['genres'].unique()
         unique_genres = set() # creating a set for unique values of df['genres']
 
@@ -73,10 +65,7 @@ def retrieve_genres():
 @app.route('/bookmarks', methods=['GET'])
 def retrieve_bookmarks():
     with sqlite3.connect(database) as con:
-        df_bookmarks = pd.read_sql_query(f'''
-            SELECT * 
-            FROM movies_bookmarks;
-        ''',con)
+        df_bookmarks = pd.read_sql_query(bookmarks_query,con)
     return jsonify(df_bookmarks.to_dict(orient='records'))
 
 
@@ -111,14 +100,10 @@ def sort_rating_asc():
 # Filtering the current active dataframe by genre
 @app.route('/filter-genre/<genre>', methods=['GET'])
 def filter_by_genre(genre):
+    segments = main_query.split('ORDER',1)
+    genre_filter_query = f"{segments[0]} AND LOWER(genres) LIKE LOWER('%{genre}%')\nORDER {segments[1]}"
     with sqlite3.connect(database) as con:
-        data.df = pd.read_sql_query(f'''
-            SELECT * 
-            FROM movies_silver
-            WHERE strftime('%m %Y', release_date) == strftime('%m %Y', date('now','start of month','-1 month'))
-            AND LOWER(genres) LIKE LOWER('%{genre}%')
-            ORDER BY rating DESC;
-        ''',con)
+        data.df = pd.read_sql_query(genre_filter_query,con)
     return jsonify(data.df.to_dict(orient='records'))
 
 
