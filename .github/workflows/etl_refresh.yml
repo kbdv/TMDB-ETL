@@ -11,7 +11,7 @@ permissions: write-all # this allows us to avoid the 403 error.
 
 
 jobs:
-  run_notebook:
+  _1_run_notebook:
     env:
       API_KEY : ${{secrets.API_KEY}}
         
@@ -36,16 +36,37 @@ jobs:
         pip install requests
         pip install matplotlib
         pip install seaborn
-        pip install pytest
 
-    - name: Execute notebook and tests  
+    - name: Execute notebook
+      run: jupyter nbconvert --to notebook --execute etl.ipynb
+  
+  _2_run_tests:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        ref: 'backend'
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    - name: Install dependencies
       run: |
-        jupyter nbconvert --to notebook --execute etl.ipynb
+        pip install jupyter
+        pip install pandas
+        pip install numpy
+        pip install requests
+        pip install pytest
+        
+    - name: Execute tests  
+      run: |
         pytest tests/test_app.py
         pytest tests/test_etl.py
    
    
-  commit_and_push:
+  _3_commit_and_push:
     runs-on: ubuntu-latest
     steps:
     - name: Commit and Push Changes
