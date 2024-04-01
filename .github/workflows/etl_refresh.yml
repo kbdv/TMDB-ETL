@@ -10,7 +10,7 @@ permissions: write-all # this allows us to avoid the 403 error.
 
 
 jobs:
-  run_notebook:
+  ETL_refresh:
     env:
       API_KEY : ${{secrets.API_KEY}}
         
