@@ -35,16 +35,18 @@ jobs:
         pip install requests
         pip install matplotlib
         pip install seaborn
-        pip install pytest
-
+        pip install pytest pytest-cov
+    
     - name: Execute notebook and tests
       run: | 
         jupyter nbconvert --to notebook --execute etl.ipynb
-        pytest tests/test_app.py
-        pytest tests/test_etl.py
+        pytest tests/ --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
+        # pytest tests/test_app.py
+        # pytest tests/test_etl.py
 
-
+   
     - name: Commit and Push Changes
+      if: ${{ success() }} 
       run: |
         git config --global user.email "krisb2022@github.com"
         git config --global user.name "kbdv"
