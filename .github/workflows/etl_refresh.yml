@@ -37,13 +37,14 @@ jobs:
         pip install requests
         pip install matplotlib
         pip install seaborn
+        pip install pytest
 
         
     - name: Execute notebook and tests  
       run: |
         jupyter nbconvert --to notebook --execute etl.ipynb
-        python tests/test_app.py
-        python tests/test_etl.py
+        pytest tests/test_app.py
+        pytest tests/test_etl.py
 
         
     - name: Commit and Push Changes
