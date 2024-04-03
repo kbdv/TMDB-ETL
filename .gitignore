@@ -4,3 +4,4 @@ testing.ipynb
 docs/
 old/
 __pycache__/
+*.pytest_cache
