@@ -9,11 +9,9 @@ import pandas as pd
 import numpy as np
 import sqlite3
 import requests
-import sys
 
 # variables
-from variables3 import database, cols
-
+from backend.variables2 import database, cols
 
 
 #-----------------------------------------------

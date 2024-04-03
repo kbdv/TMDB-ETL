@@ -14,8 +14,11 @@ import requests
 import unittest
 from unittest.mock import patch, Mock
 
+
 # variables
-from variables3 import server, database, mock_rows, mock_row, mock_list
+from backend.variables2 import server, database, mock_rows, mock_row, mock_list
+
+
 
 # Functions to test
 def get_bookmarks():
