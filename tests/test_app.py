@@ -16,7 +16,7 @@ from unittest.mock import patch, Mock
 
 
 # variables
-from server.variables2 import server, database, mock_rows, mock_row, mock_list
+from server.variables2 import server, mock_rows, mock_row, mock_list
 
 
 # Functions to test
