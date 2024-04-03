@@ -38,12 +38,12 @@ jobs:
         pip install pytest 
     
     - name: Execute notebook 
-      run: jupyter nbconvert --to notebook --execute etl.ipynb
+      run: jupyter nbconvert --to notebook --execute backend/etl.ipynb
 
       
     - name: Execute tests
       if: ${{ success() }} 
-      run: pytest tests/
+      run: pytest backend/tests/
 
    
     - name: Commit and Push Changes
@@ -52,6 +52,6 @@ jobs:
         git config --global user.email "krisb2022@github.com"
         git config --global user.name "kbdv"
         git pull
-        git add kb_movies.db
+        git add backend/kb_movies.db
         git commit -m "update by workflow run"
         git push
