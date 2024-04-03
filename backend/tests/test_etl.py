@@ -12,7 +12,7 @@ import requests
 
 # variables
 from backend.variables2 import database, cols
-
+database = './' + database
 
 #-----------------------------------------------
 # 1. verify that the tables 'movies_bronze', 'movies_silver' 'movies_bookmarks' and 'genre_list' exist in the database

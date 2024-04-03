@@ -17,7 +17,7 @@ from unittest.mock import patch, Mock
 
 # variables
 from backend.variables2 import server, database, mock_rows, mock_row, mock_list
-
+database = './' + database
 
 
 # Functions to test
